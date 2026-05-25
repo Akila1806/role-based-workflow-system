@@ -159,6 +159,29 @@
   margin-top: 40px;
 }
 
+/* Dark Mode Styles */
+[data-theme="dark"] .role-card {
+  background: #1f2937;
+  border: 1px solid #374151;
+}
+
+[data-theme="dark"] .role-card-body {
+  background: #1f2937;
+}
+
+[data-theme="dark"] .features-list li {
+  color: #f9fafb;
+}
+
+[data-theme="dark"] .features-list li svg {
+  color: #10b981;
+}
+
+[data-theme="dark"] .btn-block {
+  background-color: var(--primary-color);
+  color: white;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .landing-header h1 {

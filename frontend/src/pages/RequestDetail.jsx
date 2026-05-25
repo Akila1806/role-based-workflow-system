@@ -17,6 +17,8 @@ const RequestDetail = () => {
   const [comment, setComment] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [pendingStatus, setPendingStatus] = useState(null);
 
   useEffect(() => {
     fetchRequestDetails();
@@ -46,22 +48,25 @@ const RequestDetail = () => {
   };
 
   const handleStatusChange = async (newStatus) => {
-    if (!window.confirm(`Are you sure you want to change status to ${newStatus}?`)) {
-      return;
-    }
+    setPendingStatus(newStatus);
+    setShowModal(true);
+  };
 
+  const confirmStatusChange = async () => {
+    setShowModal(false);
     setActionLoading(true);
     setError('');
     setSuccess('');
 
     try {
       await axios.patch(`/api/requests/${id}/status`, {
-        status: newStatus,
+        status: pendingStatus,
         comment: comment || undefined
       });
 
-      setSuccess(`Status changed to ${newStatus} successfully`);
+      setSuccess(`Status changed to ${pendingStatus} successfully`);
       setComment('');
+      setPendingStatus(null);
       
       // Refresh data
       await fetchRequestDetails();
@@ -71,6 +76,11 @@ const RequestDetail = () => {
     } finally {
       setActionLoading(false);
     }
+  };
+
+  const cancelStatusChange = () => {
+    setShowModal(false);
+    setPendingStatus(null);
   };
 
   const getStatusBadge = (status) => {
@@ -118,6 +128,26 @@ const RequestDetail = () => {
 
       {error && <div className="alert alert-error">{error}</div>}
       {success && <div className="alert alert-success">{success}</div>}
+
+      {/* Confirmation Modal */}
+      {showModal && (
+        <div className="modal-overlay" onClick={cancelStatusChange}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h3 className="modal-title">Confirm Status Change</h3>
+            <p className="modal-message">
+              Are you sure you want to change status to <strong>{pendingStatus}</strong>?
+            </p>
+            <div className="modal-actions">
+              <button onClick={cancelStatusChange} className="btn btn-outline">
+                Cancel
+              </button>
+              <button onClick={confirmStatusChange} className="btn btn-primary">
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="detail-grid">
         <div className="detail-main">

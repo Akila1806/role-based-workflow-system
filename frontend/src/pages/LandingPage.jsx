@@ -37,7 +37,7 @@ const LandingPage = () => {
       title: 'Admin Portal',
       description: 'Full system administration',
       icon: <FiSettings size={48} />,
-      gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+      gradient: 'linear-gradient(135deg, #2dd4bf 0%, #14b8a6 100%)',
       features: [
         'Complete system access',
         'Close requests',

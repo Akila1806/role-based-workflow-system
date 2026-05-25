@@ -57,8 +57,8 @@ const Login = () => {
           title: 'Admin Login',
           subtitle: 'Complete system administration access',
           icon: <FiSettings size={64} />,
-          bgColor: '#0ea5e9',
-          accentColor: '#0284c7',
+          bgColor: '#14b8a6',
+          accentColor: '#0d9488',
           demoEmail: 'admin@example.com',
           roleLabel: 'Administrator'
         };
