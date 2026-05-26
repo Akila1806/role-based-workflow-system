@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import axios from 'axios';
+import api from '../config/api';
 import { FiArrowLeft, FiUser, FiCalendar, FiTag } from 'react-icons/fi';
 import './RequestDetail.css';
 
@@ -27,7 +27,7 @@ const RequestDetail = () => {
 
   const fetchRequestDetails = async () => {
     try {
-      const response = await axios.get(`/api/requests/${id}`);
+      const response = await api.get(`/api/requests/${id}`);
       setRequest(response.data.data);
       setAllowedTransitions(response.data.allowedTransitions || []);
     } catch (error) {
@@ -40,7 +40,7 @@ const RequestDetail = () => {
 
   const fetchRequestLogs = async () => {
     try {
-      const response = await axios.get(`/api/requests/${id}/logs`);
+      const response = await api.get(`/api/requests/${id}/logs`);
       setLogs(response.data.data);
     } catch (error) {
       console.error('Error fetching logs:', error);
@@ -59,7 +59,7 @@ const RequestDetail = () => {
     setSuccess('');
 
     try {
-      await axios.patch(`/api/requests/${id}/status`, {
+      await api.patch(`/api/requests/${id}/status`, {
         status: pendingStatus,
         comment: comment || undefined
       });

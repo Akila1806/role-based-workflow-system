@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../config/api';
 import { useAuth } from '../context/AuthContext';
 import { FiGrid, FiList, FiPlus } from 'react-icons/fi';
 import './MyRequests.css';
@@ -21,7 +21,7 @@ const MyRequests = () => {
   const fetchRequests = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`/api/requests/my-requests?page=${page}&limit=10&sort=${sortBy}`);
+      const response = await api.get(`/api/requests/my-requests?page=${page}&limit=10&sort=${sortBy}`);
       setRequests(response.data.data || []);
       setTotalPages(response.data.pages || 1);
       
