@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../config/api';
+import axios from 'axios';
 import './CreateRequest.css';
 
 const CreateRequest = () => {
@@ -25,7 +25,7 @@ const CreateRequest = () => {
     setLoading(true);
 
     try {
-      await api.post('/api/requests', formData);
+      await axios.post('/api/requests', formData);
       navigate('/my-requests');
     } catch (error) {
       setError(error.response?.data?.message || 'Failed to create request');

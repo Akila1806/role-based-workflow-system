@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import api from '../config/api';
+import axios from 'axios';
 import { FiGrid, FiList } from 'react-icons/fi';
 import './AllRequests.css';
 
@@ -32,7 +32,7 @@ const AllRequests = () => {
         ...Object.fromEntries(Object.entries(filters).filter(([_, v]) => v !== ''))
       });
       
-      const response = await api.get(`/api/requests?${params}`);
+      const response = await axios.get(`/api/requests?${params}`);
       setRequests(response.data.data || []);
       setTotalPages(response.data.pages || 1);
       

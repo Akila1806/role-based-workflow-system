@@ -59,14 +59,10 @@ const Layout = ({ children }) => {
             <FiHome /> Dashboard
           </Link>
 
-          {/* Only Users have My Requests */}
-          {user?.role === 'User' && (
-            <Link to="/my-requests" className={`nav-item ${isActive('/my-requests') ? 'active' : ''}`} onClick={closeMobileMenu}>
-              <FiFileText /> My Requests
-            </Link>
-          )}
+          <Link to="/my-requests" className={`nav-item ${isActive('/my-requests') ? 'active' : ''}`} onClick={closeMobileMenu}>
+            <FiFileText /> My Requests
+          </Link>
 
-          {/* Manager and Admin have All Requests */}
           {(user?.role === 'Manager' || user?.role === 'Admin') && (
             <Link to="/all-requests" className={`nav-item ${isActive('/all-requests') ? 'active' : ''}`} onClick={closeMobileMenu}>
               <FiList /> All Requests

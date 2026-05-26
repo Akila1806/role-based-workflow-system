@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
-import api from '../config/api';
+import axios from 'axios';
 import { FiFileText, FiCheckCircle, FiXCircle, FiClock, FiGrid, FiList, FiPlus } from 'react-icons/fi';
 import './Dashboard.css';
 
@@ -28,7 +28,7 @@ const Dashboard = () => {
   const fetchDashboardData = async () => {
     try {
       const endpoint = user.role === 'User' ? '/api/requests/my-requests' : '/api/requests';
-      const response = await api.get(`${endpoint}?limit=${limit}&page=${page}&sort=${sortBy}`);
+      const response = await axios.get(`${endpoint}?limit=${limit}&page=${page}&sort=${sortBy}`);
       
       setRecentRequests(response.data.data || []);
       setTotalPages(response.data.pages || 1);
@@ -37,7 +37,7 @@ const Dashboard = () => {
       console.log('Total pages:', response.data.pages); // Debug log
       
       // Calculate stats - fetch all for stats
-      const allRequests = await api.get(`${endpoint}?limit=1000`);
+      const allRequests = await axios.get(`${endpoint}?limit=1000`);
       const requests = allRequests.data.data || [];
       
       setStats({
