@@ -2,12 +2,15 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { FiUser, FiShield, FiSettings, FiEye, FiEyeOff, FiMail, FiLock } from 'react-icons/fi';
+import Modal from '../components/Modal';
+import { useModal } from '../hooks/useModal';
 import './Login.css';
 
 const Login = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { login, isAuthenticated } = useAuth();
+  const { isOpen, modalConfig, closeModal, showError } = useModal();
   
   // Determine login type from URL
   const loginType = location.pathname.replace('/login/', '') || 'user';
@@ -34,7 +37,7 @@ const Login = () => {
     if (result.success) {
       navigate('/dashboard');
     } else {
-      setError(result.message);
+      showError(result.message || 'Invalid email or password. Please try again.', 'Login Failed');
     }
     
     setLoading(false);
@@ -79,6 +82,18 @@ const Login = () => {
 
   return (
     <div className="login-page">
+      <Modal
+        isOpen={isOpen}
+        onClose={closeModal}
+        title={modalConfig.title}
+        message={modalConfig.message}
+        type={modalConfig.type}
+        confirmText={modalConfig.confirmText}
+        cancelText={modalConfig.cancelText}
+        showCancel={modalConfig.showCancel}
+        onConfirm={modalConfig.onConfirm}
+      />
+      
       {/* Left Side - Branding */}
       <div className="login-left" style={{ backgroundColor: config.bgColor }}>
         <div className="login-branding">

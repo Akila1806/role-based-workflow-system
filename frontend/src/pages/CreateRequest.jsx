@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Modal from '../components/Modal';
+import { useModal } from '../hooks/useModal';
 import './CreateRequest.css';
 
 const CreateRequest = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const { isOpen, modalConfig, closeModal, showSuccess, showError } = useModal();
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -26,9 +29,12 @@ const CreateRequest = () => {
 
     try {
       await axios.post('/api/requests', formData);
-      navigate('/my-requests');
+      showSuccess('Your request has been created successfully!', 'Request Created');
+      setTimeout(() => {
+        navigate('/my-requests');
+      }, 1500);
     } catch (error) {
-      setError(error.response?.data?.message || 'Failed to create request');
+      showError(error.response?.data?.message || 'Failed to create request. Please try again.', 'Error');
     } finally {
       setLoading(false);
     }
@@ -36,6 +42,18 @@ const CreateRequest = () => {
 
   return (
     <div className="create-request">
+      <Modal
+        isOpen={isOpen}
+        onClose={closeModal}
+        title={modalConfig.title}
+        message={modalConfig.message}
+        type={modalConfig.type}
+        confirmText={modalConfig.confirmText}
+        cancelText={modalConfig.cancelText}
+        showCancel={modalConfig.showCancel}
+        onConfirm={modalConfig.onConfirm}
+      />
+      
       <div className="page-header">
         <h1>Create New Request</h1>
       </div>

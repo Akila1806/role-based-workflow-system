@@ -59,20 +59,23 @@ const Layout = ({ children }) => {
             <FiHome /> Dashboard
           </Link>
 
-          <Link to="/my-requests" className={`nav-item ${isActive('/my-requests') ? 'active' : ''}`} onClick={closeMobileMenu}>
-            <FiFileText /> My Requests
-          </Link>
+          {/* Only Users can see My Requests and Create Request */}
+          {user?.role === 'User' && (
+            <>
+              <Link to="/my-requests" className={`nav-item ${isActive('/my-requests') ? 'active' : ''}`} onClick={closeMobileMenu}>
+                <FiFileText /> My Requests
+              </Link>
 
+              <Link to="/create-request" className={`nav-item ${isActive('/create-request') ? 'active' : ''}`} onClick={closeMobileMenu}>
+                <FiPlusCircle /> Create Request
+              </Link>
+            </>
+          )}
+
+          {/* Managers and Admins can see All Requests */}
           {(user?.role === 'Manager' || user?.role === 'Admin') && (
             <Link to="/all-requests" className={`nav-item ${isActive('/all-requests') ? 'active' : ''}`} onClick={closeMobileMenu}>
               <FiList /> All Requests
-            </Link>
-          )}
-
-          {/* Only Users can create requests */}
-          {user?.role === 'User' && (
-            <Link to="/create-request" className={`nav-item ${isActive('/create-request') ? 'active' : ''}`} onClick={closeMobileMenu}>
-              <FiPlusCircle /> Create Request
             </Link>
           )}
         </nav>

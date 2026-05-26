@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 import { FiArrowLeft, FiUser, FiCalendar, FiTag } from 'react-icons/fi';
+import Modal from '../components/Modal';
+import { useModal } from '../hooks/useModal';
 import './RequestDetail.css';
 
 const RequestDetail = () => {
@@ -17,6 +19,7 @@ const RequestDetail = () => {
   const [comment, setComment] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const { isOpen, modalConfig, closeModal, showSuccess, showError, showConfirm } = useModal();
 
   useEffect(() => {
     fetchRequestDetails();
@@ -46,31 +49,33 @@ const RequestDetail = () => {
   };
 
   const handleStatusChange = async (newStatus) => {
-    if (!window.confirm(`Are you sure you want to change status to ${newStatus}?`)) {
-      return;
-    }
+    showConfirm(
+      `Are you sure you want to change the status to "${newStatus}"?`,
+      async () => {
+        setActionLoading(true);
+        setError('');
+        setSuccess('');
 
-    setActionLoading(true);
-    setError('');
-    setSuccess('');
+        try {
+          await axios.patch(`/api/requests/${id}/status`, {
+            status: newStatus,
+            comment: comment || undefined
+          });
 
-    try {
-      await axios.patch(`/api/requests/${id}/status`, {
-        status: newStatus,
-        comment: comment || undefined
-      });
-
-      setSuccess(`Status changed to ${newStatus} successfully`);
-      setComment('');
-      
-      // Refresh data
-      await fetchRequestDetails();
-      await fetchRequestLogs();
-    } catch (error) {
-      setError(error.response?.data?.message || 'Failed to update status');
-    } finally {
-      setActionLoading(false);
-    }
+          showSuccess(`Status successfully changed to ${newStatus}!`, 'Status Updated');
+          setComment('');
+          
+          // Refresh data
+          await fetchRequestDetails();
+          await fetchRequestLogs();
+        } catch (error) {
+          showError(error.response?.data?.message || 'Failed to update status. Please try again.', 'Update Failed');
+        } finally {
+          setActionLoading(false);
+        }
+      },
+      'Confirm Status Change'
+    );
   };
 
   const getStatusBadge = (status) => {
@@ -112,6 +117,18 @@ const RequestDetail = () => {
 
   return (
     <div className="request-detail">
+      <Modal
+        isOpen={isOpen}
+        onClose={closeModal}
+        title={modalConfig.title}
+        message={modalConfig.message}
+        type={modalConfig.type}
+        confirmText={modalConfig.confirmText}
+        cancelText={modalConfig.cancelText}
+        showCancel={modalConfig.showCancel}
+        onConfirm={modalConfig.onConfirm}
+      />
+      
       <button onClick={() => navigate(-1)} className="btn btn-outline back-btn">
         <FiArrowLeft /> Back
       </button>
